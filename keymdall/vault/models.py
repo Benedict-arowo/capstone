@@ -5,6 +5,11 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
+    # MAYBE maybe login with email
+
+    # username = models.CharField(max_length=30)
+    # email = models.EmailField(unique=True)
+    # USERNAME_FIELD = "email"
 
     pass
 

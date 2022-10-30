@@ -20,7 +20,7 @@
         </a>
         {%if user.is_authenticated%}
         <a href="{%url 'vault:userpage' %}">
-            <li>User</li>
+            <li>{{user | capfirst}}</li>
         </a>
         <a href="{%url 'vault:logout'%}">
             <li>Log-out</li>

@@ -25,8 +25,8 @@
 
 <!-- view for registration module -->
 
-<h2> registration </h2>
 <div id="register_form" style="display: none;">
+    <h2> registration </h2>
     <form action="{%url 'vault:register'%}" method="post">
         {%csrf_token%}
         <div>
@@ -35,7 +35,7 @@
 
         <div>
 
-            <input type="email" name="emal" placeholder="Email Address">
+            <input type="email" name="email" placeholder="Email Address">
         </div>
 
         <div>
