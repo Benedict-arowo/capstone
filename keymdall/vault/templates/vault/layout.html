@@ -7,13 +7,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/icon_sm.ico' %}"/>
     <link rel="stylesheet" href="{%static 'vault/style.css'%}">
-
     <script src="{%static 'vault/script.js' %}"></script>
     <title>KeyMdall - {%block title%} {%endblock%}</title>
 
 </head>
-
+<nav>
+    <ul>
+        <a href="{%url 'vault:index'%}">
+            <li>Home</li>
+        </a>
+        {%if user.is_authenticated%}
+        <a href="{%url 'vault:userpage' %}">
+            <li>User</li>
+        </a>
+        <a href="{%url 'vault:logout'%}">
+            <li>Log-out</li>
+        </a>
+        {%else%}
+        <a href="{%url 'vault:login'%}">
+            <li>Log-in</li>
+        </a>
+        {%endif%}
+    </ul>
+</nav>
 <body>
     {% block body %}
 

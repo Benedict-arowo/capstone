@@ -14,11 +14,33 @@ import json
 
 # Create your views here.
 
-@login_required(login_url="/login")
 def index(request):
+    return render(request, 'vault/index.html')
 
-    return HttpResponseRedirect(reverse('index.html'))
 
 def login_view(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+        else:
+            return render(request, 'vault/login.html', {"message": "Invalid username and/or password."})
 
     return render(request, 'vault/login.html')
+
+def register(request):
+    """ no body or template only js toggle in login view"""
+    pass
+
+#TODO add login_required
+def userpage(request):
+    return render(request, 'vault/userpage.html')
+
+def logout(request):
+    logout(request)
+    """add logout funct to log user out and reroute to index page """
+
+    return HttpResponseRedirect(reverse('vault:index'))

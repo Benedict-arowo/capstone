@@ -1,0 +1,60 @@
+{% extends "vault/layout.html" %}
+
+{% block title %} login {% endblock title %}
+
+{% block body %}
+<div id="login_form">
+
+    <h2>this is the login page</h2>
+
+
+    <form action="{%url 'vault:login'%}" method="post">
+        {%csrf_token%}
+        <input autofocus type="text" name="username" placeholder="Username">
+        <input autofocus type="password" name="password" placeholder="Password">
+        <input type="submit" value="Login">
+    </form>
+
+    {% if message %}
+    {{message}}
+    {%endif%}
+
+    <button class="view_toggle">Register</button>
+</div>
+
+
+<div id="register_form" style="display: none;">
+    <form action="{%url 'vault:register'%}" method="post">
+        {%csrf_token%}
+        <div>
+            <input autofocus type="text" name="username" placeholder="Username">
+        </div>
+
+        <div>
+
+            <input type="email" name="emal" placeholder="Email Address">
+        </div>
+
+        <div>
+            <input type="password" name="password" placeholder="Password">
+        </div>
+        <div>
+            <input type="password" name="confirmation" placeholder="Repeat password">
+        </div>
+        <div>
+
+            <input type="submit" value="Register">
+        </div>
+
+    </form>
+
+    {% if message %}
+    {{message}}
+
+    {%endif%}
+
+</div>
+<button class="show_login" value="show_login">Register</button>
+# TODO decidere cosa fare se un bottone che toggla tra una view e l'altra, oppure due bottoni con id diversi con 2 listeners diversi
+
+{% endblock body %}

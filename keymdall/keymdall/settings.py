@@ -81,6 +81,12 @@ DATABASES = {
     }
 }
 
+# added line to overwrite my User model instead the default
+# https://stackoverflow.com/questions/49189402/auth-user-groups-fields-e304-reverse-accessor-for-user-groups-clashes-with
+# https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#substituting-a-custom-user-model
+AUTH_USER_MODEL = 'vault.User'
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
