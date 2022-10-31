@@ -22,6 +22,8 @@
         * element display
     * added buttons for switching view and considering various implementation
 
+* [31/10]
+    * added some styling to index to visually see the blocks layout
 
 
 
@@ -31,6 +33,10 @@
 * not even opening an element fetches further datas.
     *upon inspection it really seems like on loading we get sent a json response fo 23.000 lines (after formatting)
 
+
+## resources to look at
+_Colorfield = https://pypi.org/project/django-colorfield/
+_Barcode = https://python.plainenglish.io/generating-barcodes-with-django-52e450fd960b
 
 
 ### attributions

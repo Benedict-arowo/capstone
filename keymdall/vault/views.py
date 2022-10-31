@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from django import forms
 from django.forms import ModelForm
@@ -15,7 +15,7 @@ import json
 # from .models import .....
 
 # Create your views here.
-
+@login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
 def index(request):
     return render(request, 'vault/index.html')
 
@@ -61,7 +61,7 @@ def register(request):
 
     pass
 
-#TODO add login_required
+@login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
 def userpage(request):
     return render(request, 'vault/userpage.html')
 

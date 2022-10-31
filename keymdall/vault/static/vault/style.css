@@ -1,4 +1,85 @@
-#toggle-view{
+/*
+#ffadad
+#ffd6a5
+#fdffb6
+#caffbf
+#9bf6ff
+#a0c4ff
+#bdb2ff
+#ffc6ff
+*/
+
+html, body{
+    background-color: #f9e7d2;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+* {
+    box-sizing: border-box;
+}
+
+nav{
+    background-color: #2B3A67;
+    font-size: 20px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+}
+nav>ul>a>li{
+    display: inline;
+    list-style: none ;
+    margin-left: 18px;
+    color: white;
+}
+
+/* TEMP main part of the body */
+#container-flex{
+    background-color: #beedf1;
+    display: flex;
+    padding: 10px;
+}
+
+#sidebar{
+    background-color:#bdb2ff ;
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+/* buttons in sidebar to switch main view content */
+#view_toggles >li > button{
+    background-color: green;
+    color: white;
+    font-weight: bold;
+}
+
+#main-view{
+    background-color: #caffbf;
+    display: flex;
+    flex-grow: 1;
+    padding:5px;
+    flex-direction: column;
+}
+#vault-content{
+    background-color: #93b88c;
+
+}
+
+#element-preview{
+    background-color: #fdffb6;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+}
+
+#welcome-login{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+/* button to toggle between login/register */
+#login-register-toggle{
     background-color: blue;
     color: white;
     font-weight: bold;

@@ -5,57 +5,60 @@
 {% block body %}
 
 <!-- default view for login -->
-<button id="toggle-view" class="btn" value="register_form">Register</button>
+<div id="welcome-login">
 
-<div id="login_form">
-    <h2>this is the login page</h2>
+    <button id="login-register-toggle" class="btn" value="register_form">Register</button>
 
-    <form action="{%url 'vault:login'%}" method="post">
-        {%csrf_token%}
-        <input autofocus type="text" name="username" placeholder="Username">
-        <input autofocus type="password" name="password" placeholder="Password">
-        <input type="submit" value="Login">
-    </form>
+    <div id="login_form">
+        <h2>Welcome!</h2>
 
-    {% if message %}
-    {{message}}
-    {%endif%}
-
-</div>
-
-<!-- view for registration module -->
-
-<div id="register_form" style="display: none;">
-    <h2> registration </h2>
-    <form action="{%url 'vault:register'%}" method="post">
-        {%csrf_token%}
-        <div>
+        <form action="{%url 'vault:login'%}" method="post">
+            {%csrf_token%}
             <input autofocus type="text" name="username" placeholder="Username">
-        </div>
+            <input autofocus type="password" name="password" placeholder="Password">
+            <input type="submit" value="Login">
+        </form>
 
-        <div>
+        {% if message %}
+        {{message}}
+        {%endif%}
 
-            <input type="email" name="email" placeholder="Email Address">
-        </div>
+    </div>
 
-        <div>
-            <input type="password" name="password" placeholder="Password">
-        </div>
-        <div>
-            <input type="password" name="confirmation" placeholder="Repeat password">
-        </div>
-        <div>
+    <!-- view for registration module -->
 
-            <input type="submit" value="Register">
-        </div>
+    <div id="register_form" style="display: none;">
+        <h2> registration </h2>
+        <form action="{%url 'vault:register'%}" method="post">
+            {%csrf_token%}
+            <div>
+                <input autofocus type="text" name="username" placeholder="Username">
+            </div>
 
-    </form>
+            <div>
 
-    {% if message %}
-    {{message}}
+                <input type="email" name="email" placeholder="Email Address">
+            </div>
 
-    {%endif%}
+            <div>
+                <input type="password" name="password" placeholder="Password">
+            </div>
+            <div>
+                <input type="password" name="confirmation" placeholder="Repeat password">
+            </div>
+            <div>
 
+                <input type="submit" value="Register">
+            </div>
+
+        </form>
+
+        {% if message %}
+        {{message}}
+
+        {%endif%}
+
+    </div>
 </div>
 
 
