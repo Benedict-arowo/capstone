@@ -26,7 +26,15 @@
 
 * [31/10]
     * added some styling to index to visually see the blocks layout
-
+    * created the models
+    *  changed some models
+    * created the forms
+    * canged dosplay
+    * mad a view route to save the entry handeld by django
+    * added comments
+        <!-- òast thing, i was loosin focus -->
+    * added async reuest to GET requests to get back list of saved access
+    * added proprerties to models
 
 
 

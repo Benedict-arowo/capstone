@@ -71,6 +71,13 @@ function vault_page(){
     };
 }
 
-function get_logins(){
+function logindata(){
+
+// with this I want to load the reposne from server then lookfor the hiddent listing-card and send cloneNode on each iteration
+    fetch(`/logindata/`)
+    .then((response)=> response.json())
+    .then((data)=>{
+
+    })
 
 }

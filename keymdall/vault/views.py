@@ -13,11 +13,9 @@ import json
 
 
 
-
-
-# Create your views here.
 @login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
 def index(request):
+    """index displays the forms to add login items"""
     entry_form = EntryForm()
     uri_field = UriForm()
 
@@ -28,6 +26,7 @@ def index(request):
     return render(request, 'vault/index.html', context=context)
 
 def login_view(request):
+    """same as other cs50, login gets routed to when user is anonymous"""
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
@@ -63,21 +62,23 @@ def register(request):
         return HttpResponseRedirect(reverse('vault:index'))
 
 def new_element(request):
+    """on post of new element if uri present, uri save TODO
+        if login form submit is valid, save it and return to index
+    """
     if request.method == "POST":
         new_element = EntryForm(request.POST)
         try:
             uri = UriForm(request.POST)
             if uri.is_valid():
-                print(uri)
+                uri.instance.
         except:
             uri = ""
 
         if new_element.is_valid():
+            # print(f" new elem : {new_element.uri}")
             new_element.instance.owner = request.user
             new_element.save()
         return HttpResponseRedirect(reverse('vault:index'))
-
-
 
 
     else:
@@ -85,10 +86,17 @@ def new_element(request):
 
 @login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
 def userpage(request):
+    """see user dashboard and management"""
     return render(request, 'vault/userpage.html')
 
 def logout_view(request):
     logout(request)
     """add logout funct to log user out and reroute to index page """
-
     return HttpResponseRedirect(reverse('vault:index'))
+
+
+def logindata(request):
+    """ async route to fetch the data with GET and send back the content from user"""
+    logins = Entry.objects.filter(owner=request.user)
+    return JsonResponse([login.serialized for login in logins])
+

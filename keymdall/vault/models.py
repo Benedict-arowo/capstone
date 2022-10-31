@@ -15,6 +15,7 @@ class User(AbstractUser):
     pass
 
 class Entry(models.Model):
+    """login model (TODO change Entry to Login or something better"""
     id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=80, blank=False, null=False)
     username = models.CharField(max_length=80, null=True, blank=True)
@@ -28,10 +29,21 @@ class Entry(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-        
+
+    @property
+    def serialized(self):
+        return {
+            'title' : self.title,
+            'username': self.username,
+            'password': self.password,
+            'note': self.note,
+            'uri' : self.uri
+        }
+
     pass
 
 class Uri(models.Model):
+    """one to many foreign table for multiple URI belonging to a Login"""
     id = models.BigAutoField(primary_key=True)
     uri = models.URLField(null=True, blank=True)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="uri")
@@ -39,6 +51,7 @@ class Uri(models.Model):
 
 
 class History(models.Model):
+    """password history for Logins"""
     id = models.BigAutoField(primary_key=True)
     old_passw = models.CharField(max_length=80)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="previous_password")
