@@ -1,0 +1,13 @@
+{%load static%}
+
+
+    <h4>New Element</h4>
+
+    <form action="{%url 'vault:new_element' %}" method="post">
+        {%csrf_token%}
+            <p>view for new item</p>
+            {{entry_form.as_div}}
+            {{uri_field}}
+        <input type="submit" value="Submit" name="add_login">
+    </form>
+

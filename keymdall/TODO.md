@@ -3,6 +3,8 @@
 
 ~~1. build registration and login page into one with toggle between views.~~
 2. Add logic to registration, adding instances of user in db after successful registration
+4. "add notes", "add cards" forms into view
+3. "add folder" form to view
 
 <br>
 

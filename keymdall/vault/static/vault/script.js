@@ -32,6 +32,7 @@ function login_toggle(){
 }
 
 function vault_page(){
+    // on vault page default to login view and hide notes
     const login_view = document.querySelector('#login-view').style.display = "block";
     const notes_view = document.querySelector('#notes-view').style.display = "none";
     const cards_view = document.querySelector('#cards-view').style.display = "none";
@@ -42,23 +43,23 @@ function vault_page(){
     list.onclick = (e) => {
         console.log(this.event.target.value)
         if(this.event.target.value == "logins"){
-            login_view.style.display = "block";
-            notes_view.style.display = "none";
-            cards_view.style.display = "none";
+            document.querySelector('#login-view').style.display = "block";
+            document.querySelector('#notes-view').style.display = "none";
+            document.querySelector('#cards-view').style.display = "none";
 
-            get_logins();
+            listen_logins();
         }else if (this.event.target.value == "notes"){
-            login_view.style.display = "none";
-            notes_view.style.display = "block";
-            cards_view.style.display = "none";
+            document.querySelector('#login-view').style.display = "none";
+            document.querySelector('#notes-view').style.display = "block";
+            document.querySelector('#cards-view').style.display = "none";
 
-            get_notes();
+            listen_notes();
         }else if (this.event.target.value == "cards"){
-            login_view.style.display = "none";
-            notes_view.style.display = "none";
-            cards_view.style.display = "block";
+            document.querySelector('#login-view').style.display = "none";
+            document.querySelector('#notes-view').style.display = "none";
+            document.querySelector('#cards-view').style.display = "block";
 
-            get_cards();
+            listen_cards();
         };
     };
 

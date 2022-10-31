@@ -1,4 +1,4 @@
-from .models import Entry, Note, Card, History, Uri, User
+from .models import Entry, Folder, Note, Card, Uri
 from django.forms import ModelForm, Textarea, PasswordInput, URLInput
 
 
@@ -12,6 +12,15 @@ class EntryForm(ModelForm):
 
         }
 
+class UriForm(ModelForm):
+    class Meta:
+        model = Uri
+        fields = ('uri',)
+        widgets = {
+            'uri': URLInput(attrs={'placeholder': "url..."})
+        }
+
+
 class NoteForm(ModelForm):
     class Meta:
         model = Note
@@ -20,10 +29,21 @@ class NoteForm(ModelForm):
             'text' : Textarea(attrs={'rows':6, 'placeholder': 'Add your note here...'})
         }
 
-class UriForm(ModelForm):
+
+class CardForm(ModelForm):
     class Meta:
-        model = Uri
-        fields = ('uri',)
+        model = Card
+        fields = ('title', 'value', 'pin', 'notes', 'favorite','folder',)
         widgets = {
-            'uri': URLInput(attrs={'placeholder': "url..."})
+            'value': Textarea(attrs={'placeholder':"Number/Code"}),
+            'pin': PasswordInput(attrs={'placeholder': "PIN/Passcode"})
+        }
+
+# started as colorfield external module, but maybe can use html type=color selector in a charfield
+class NewFolder(ModelForm):
+    class Meta:
+        model = Folder
+        fields = ('name', 'color',)
+        widgets = {
+            'color': Textarea(attrs={'type':"color"})
         }

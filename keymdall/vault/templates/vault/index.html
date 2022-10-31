@@ -19,7 +19,15 @@
 
         <div id="vault-content">
             <div id="login-view">
-                <p>you are watching the logins</p>
+                <h5>Logins:</h5>
+                {% for login in all_logins %}
+                  {%include 'vault/login-card.html'%}
+
+                {%empty%}
+                <p>empty loop</p>
+
+                {%endfor%}
+
             </div>
             <div id="notes-view">
                 <p>you are watching the notes</p>
@@ -34,17 +42,15 @@
     </div>
 
     <div id="element-preview">
-
         <button id="add-item">Add item</button>
-    <div id="new-item">
-        <p>view for new item</p>
-        {{entry_form.as_div}}
-        {{uri_field}}
-    </div>
-    <div id="item-content">
+        <div id="new-item" style="display: none ;">
+            {% include "vault/new_item.html" %}
+        </div>
+
+        <div id="item-content">
 
             <p>this is where the element will be displayed or as a modal</p>
-    </div>
+        </div>
     </div>
 
 </div>

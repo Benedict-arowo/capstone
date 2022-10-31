@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse, reverse_lazy
 
 from .models import Entry, Note, Card, History, User
-from .forms import EntryForm, UriForm
+from .forms import EntryForm, UriForm, NoteForm, CardForm
 
 import json
 
@@ -21,7 +21,9 @@ def index(request):
     entry_form = EntryForm()
     uri_field = UriForm()
 
-    context = {'entry_form': entry_form, 'uri_field': uri_field }
+    user_logins= Entry.objects.filter(owner=request.user).order_by('-id')
+
+    context = {'entry_form': entry_form, 'uri_field': uri_field, 'all_logins':user_logins }
 
     return render(request, 'vault/index.html', context=context)
 
@@ -60,11 +62,26 @@ def register(request):
         login(request, user)
         return HttpResponseRedirect(reverse('vault:index'))
 
+def new_element(request):
+    if request.method == "POST":
+        new_element = EntryForm(request.POST)
+        try:
+            uri = UriForm(request.POST)
+            if uri.is_valid():
+                print(uri)
+        except:
+            uri = ""
+
+        if new_element.is_valid():
+            new_element.instance.owner = request.user
+            new_element.save()
+        return HttpResponseRedirect(reverse('vault:index'))
 
 
 
 
-    pass
+    else:
+        return JsonResponse({'error':"Only POST requests are accepted"})
 
 @login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
 def userpage(request):
