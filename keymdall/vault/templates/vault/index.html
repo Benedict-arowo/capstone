@@ -4,5 +4,34 @@
 
 {%block body%}
 
-    <h2>this is the index page</h2>
+<div class="container flex">
+    <div class="sidebar">
+        <p>this is the sidebar</p>
+        <ul id = 'view_toggles'>
+            <li><button value="logins">logins</button></li>
+            <li><button value="notes">notes</button></li>
+            <li><button value="cards">cards</button></li>
+        </ul>
+    </div>
+    <div class="main-view">
+
+        <h2>this is the index page</h2>
+    </div>
+    <div id="vault-content">
+        <div id="login-view">
+            <p>you are watching the logins</p>
+        </div>
+        <div id="notes-view">
+            <p>you are watching the notes</p>
+
+        </div>
+        <div id="cards-view">
+            <p>you are watching the cards</p>
+
+        </div>
+        this is where the element will be displayed or as a modal
+
+    </div>
+</div>
+
 {%endblock%}

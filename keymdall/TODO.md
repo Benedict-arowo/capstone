@@ -15,6 +15,22 @@
     * created the register route with a button that switches the login form to registration asyncronous to avoid refresh and additional templates.
     * added layout inheritance and stylesheet and script files in static
 
+    ...later at night
+    * added three section
+        * side panel
+        * vault content
+        * element display
+    * added buttons for switching view and considering various implementation
+
+
+
+
+
+## notes:
+* it seems like they just load everything on first request, since there is no further fetching between sections and elements, just PUT and DELETE requests on some update actions
+* not even opening an element fetches further datas.
+    *upon inspection it really seems like on loading we get sent a json response fo 23.000 lines (after formatting)
+
 
 
 ### attributions
