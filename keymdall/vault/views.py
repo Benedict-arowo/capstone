@@ -6,19 +6,24 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse, reverse_lazy
 
-from django import forms
-from django.forms import ModelForm
+from .models import Entry, Note, Card, History, User
+from .forms import EntryForm, UriForm
 
-from vault.models import User, Entry
 import json
 
-# from .models import .....
+
+
+
 
 # Create your views here.
 @login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
 def index(request):
-    return render(request, 'vault/index.html')
+    entry_form = EntryForm()
+    uri_field = UriForm()
 
+    context = {'entry_form': entry_form, 'uri_field': uri_field }
+
+    return render(request, 'vault/index.html', context=context)
 
 def login_view(request):
     if request.method == "POST":

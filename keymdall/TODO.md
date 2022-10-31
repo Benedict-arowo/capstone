@@ -33,6 +33,10 @@
 * not even opening an element fetches further datas.
     *upon inspection it really seems like on loading we get sent a json response fo 23.000 lines (after formatting)
 
+* PASSWORD to toggle/untoggle view, as I suspected, js change attribute type='password' to type='text'
+* ENTRY>URL, many to one relationship, must be another model
+* URI decide if just stick to one and be part of the element or as a separate element with second ajax call
+
 
 ## resources to look at
 _Colorfield = https://pypi.org/project/django-colorfield/
