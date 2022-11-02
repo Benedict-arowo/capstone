@@ -12,20 +12,73 @@ from .forms import EntryForm, UriForm, NoteForm, CardForm
 import json
 
 
+# ===================================================
 
 @login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
 def index(request):
-    """index displays the forms to add login items"""
+    """index displays the forms to add login items
+        while inside index js sends ajax request to populate the user vault
+    """
     entry_form = EntryForm()
-    uri_field = UriForm()
-
-    user_logins= Entry.objects.filter(owner=request.user).order_by('-id')
-
-    context = {'entry_form': entry_form, 'uri_field': uri_field, 'all_logins':user_logins }
+    uri_field = UriForm(initial={'uri': "http://"})
+    context = {'entry_form': entry_form, 'uri_field': uri_field}
 
     return render(request, 'vault/index.html', context=context)
 
-def login_view(request):
+# ===================================================
+
+def new_element(request):
+    """
+    gets POST request, validates EntryForm and saves adding owner
+    gets UriForm, validates and saves, adding the new entry as F.K.
+    returns to Index
+    """
+    if request.method == "POST":
+        entry_form = EntryForm(request.POST)
+
+        if entry_form.is_valid():
+            # print(f" new elem : {new_element.uri}")
+            entry_form.instance.owner = request.user
+            new_element = entry_form.save()
+            try:
+                uri_submission = UriForm(request.POST)
+                if uri_submission.is_valid():
+
+                    uri_submission.instance.entry = new_element
+
+                    uri_submission.save()
+                    print(uri_submission)
+                else:
+                    # if no addition after the initial "hhtp://"
+                    print("submission not valid")
+            # might remove this
+            except Exception as e:
+                print(e)
+                print("blank text")
+
+        return HttpResponseRedirect(reverse('vault:index'))
+    else:
+        return JsonResponse({'error':"Only POST requests are accepted"})
+
+
+
+# ===================================================
+
+def logins_vault(request):
+    """ async route to fetch the data with GET and send back the content from user ordered by title"""
+    logins = Entry.objects.filter(owner=request.user).order_by('title')
+    return JsonResponse([login.serialized for login in logins], safe=False)
+
+
+# ===================================================
+
+@login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
+def userpage(request):
+    """see user dashboard and management"""
+    return render(request, 'vault/userpage.html')
+
+# =========== login/logout/register ==========
+def login_page(request):
     """same as other cs50, login gets routed to when user is anonymous"""
     if request.method == "POST":
         username = request.POST['username']
@@ -61,42 +114,7 @@ def register(request):
         login(request, user)
         return HttpResponseRedirect(reverse('vault:index'))
 
-def new_element(request):
-    """on post of new element if uri present, uri save TODO
-        if login form submit is valid, save it and return to index
-    """
-    if request.method == "POST":
-        new_element = EntryForm(request.POST)
-        try:
-            uri = UriForm(request.POST)
-            if uri.is_valid():
-                uri.instance.
-        except:
-            uri = ""
-
-        if new_element.is_valid():
-            # print(f" new elem : {new_element.uri}")
-            new_element.instance.owner = request.user
-            new_element.save()
-        return HttpResponseRedirect(reverse('vault:index'))
-
-
-    else:
-        return JsonResponse({'error':"Only POST requests are accepted"})
-
-@login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
-def userpage(request):
-    """see user dashboard and management"""
-    return render(request, 'vault/userpage.html')
-
-def logout_view(request):
+def logout_user(request):
     logout(request)
     """add logout funct to log user out and reroute to index page """
     return HttpResponseRedirect(reverse('vault:index'))
-
-
-def logindata(request):
-    """ async route to fetch the data with GET and send back the content from user"""
-    logins = Entry.objects.filter(owner=request.user)
-    return JsonResponse([login.serialized for login in logins])
-

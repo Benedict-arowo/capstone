@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 }); /*end of DOMContentLoaded */
 
+// ========================================================================================================
 
 function login_toggle(){
     const toggle = document.querySelector('#login-register-toggle');
@@ -31,53 +32,124 @@ function login_toggle(){
     };
 }
 
+// ========================================================================================================
+
 function vault_page(){
-    // on vault page default to login view and hide notes
-    const login_view = document.querySelector('#login-view').style.display = "block";
-    const notes_view = document.querySelector('#notes-view').style.display = "none";
-    const cards_view = document.querySelector('#cards-view').style.display = "none";
-    document.querySelector('#new-item').style.display="none";
+    // on vault_section only login list content is set to block, everything else is hidden
 
+    // launches function to load the content for logins
+    login_vault()
 
-    const list = document.querySelector('#view_toggles');
-    list.onclick = (e) => {
-        console.log(this.event.target.value)
-        if(this.event.target.value == "logins"){
-            document.querySelector('#login-view').style.display = "block";
-            document.querySelector('#notes-view').style.display = "none";
-            document.querySelector('#cards-view').style.display = "none";
+    // select the list of toggles, for each button listents to click and calls function that hides all section, except the one in button value
+    const toggles_list = document.querySelector('#view_toggles');
+    toggles_list.querySelectorAll('button').forEach(button => button.addEventListener('click', main_view_switch, false));
 
-            listen_logins();
-        }else if (this.event.target.value == "notes"){
-            document.querySelector('#login-view').style.display = "none";
-            document.querySelector('#notes-view').style.display = "block";
-            document.querySelector('#cards-view').style.display = "none";
-
-            listen_notes();
-        }else if (this.event.target.value == "cards"){
-            document.querySelector('#login-view').style.display = "none";
-            document.querySelector('#notes-view').style.display = "none";
-            document.querySelector('#cards-view').style.display = "block";
-
-            listen_cards();
-        };
-    };
-
-    const add_item = document.querySelector('#add-item');
+    // on press of Add Item button, hides element in the aside column and only shows Form to add new login
+    const add_item = document.querySelector('#add-login');
     add_item.onclick = () =>{
-        document.querySelector('#item-content').style.display="none";
-        document.querySelector('#new-item').style.display="block";
+        const aside_section = document.querySelector('aside');
+        aside_section.querySelectorAll('section').forEach(section => section.style.display="none");
+        aside_section.querySelector('#new-item').style.display="block";
 
     };
 }
 
-function logindata(){
+// ========================================================================================================
 
-// with this I want to load the reposne from server then lookfor the hiddent listing-card and send cloneNode on each iteration
-    fetch(`/logindata/`)
+function login_vault(){
+    //  GET request from server to get serialized content of each login by user
+    fetch(`/login_vault`)
     .then((response)=> response.json())
     .then((data)=>{
 
-    })
+        data.forEach(element => {
+            // for each creates a card and populates it with element's values
+            card = create_card();
+            card.querySelector('.title').textContent = element.title;
+            card.querySelector('.username').textContent = element.username;
+            let psw_btn = card.querySelector('.password')
+            // FIX fix security around cleartext password not be stored in value cleartext (maybe fetch other request for password)
+            // pws_btn click calls function to copy password to user's clipboard
+            psw_btn.value = element.password
+            psw_btn.addEventListener('click', copy_password, false)
+
+            // on view_element button calls function that hides other section except the one of this element type
+            let view_elem_btn = card.querySelector('.view-content')
+            view_elem_btn.setAttribute('data', element.id);
+            view_elem_btn.value = element.type;
+            view_elem_btn.addEventListener('click', view_element, false)
+
+            // after populating element-card values, sets card to block and appends to vault content
+            card.style.display = "block";
+            document.querySelector('#logins-view').append(card);
+        }); /* end foreach */
+    }); /* end fetch request*/
+
+} /* end function */
+
+// ========================================================================================================
+
+function view_element(event){
+    const element_preview = document.querySelector('aside')
+    element_preview.querySelectorAll('section').forEach(el => el.style.display = "none");
+
+    // on view button click after hiding every section, based on the values calls dedicated function
+    const elem_type = event.currentTarget.value
+    switch (elem_type) {
+        case 'login':
+            // get the id from data attribute of the button
+            let id = event.currentTarget.getAttribute('data')
+            login_content(id)
+            break;
+        case 'note':
+            note_content()
+            break;
+        case 'card':
+            card_content()
+            break;
+
+        default:
+            console.log("error SWITCH case")
+            break;
+    }
+}
+
+// ========================================================================================================
+
+function login_content(id){
+    document.querySelector('#login-template').style.display = "block"
+    fetch()
+    const template = document.querySelector('.login-template')
+    // template.querySelector('.title') =
+    console.log(id);
+}
+
+// ========================================================================================================
+
+// called on button press for every login box element
+function copy_password(event){
+    console.log(event.currentTarget)
+    let password = event.currentTarget.value //MAYBE minimize skipping assignment
+    navigator.clipboard.writeText(password)
+
+}
+
+// ========================================================================================================
+
+// creates card template by copying node from default template
+function create_card(){
+    const template = document.querySelector('.login-box');
+    const card = template.cloneNode(true);
+    return card;
+}
+
+// ========================================================================================================
+
+function main_view_switch(event){
+    // selects vault content, sets all section to hidden
+    const vault_content = document.querySelector('#vault-content');
+    vault_content.querySelectorAll('section').forEach(elem => elem.style.display = "none");
+    // using the button event value, only shows section of the one clicked by user
+    vault_content.querySelector('#' + event.currentTarget.value + '-view').style.display = "block";
 
 }

@@ -1,5 +1,5 @@
 from .models import Entry, Folder, Note, Card, Uri
-from django.forms import ModelForm, Textarea, PasswordInput, URLInput
+from django.forms import ModelForm, Textarea, PasswordInput, URLInput, TextInput
 
 
 class EntryForm(ModelForm):
@@ -15,9 +15,9 @@ class EntryForm(ModelForm):
 class UriForm(ModelForm):
     class Meta:
         model = Uri
-        fields = ('uri',)
+        fields = ('uri',) 
         widgets = {
-            'uri': URLInput(attrs={'placeholder': "url..."})
+            'uri': TextInput(attrs={'placeholder': "url..."})
         }
 
 

@@ -5,54 +5,72 @@
 {%block body%}
 
 <div id="container-flex">
-    <div id="sidebar">
+    <sidebar id="sidebar">
         <p>this is the sidebar</p>
-        <ul id='view_toggles'>
+        <ul id='view_toggles' value="ASD">
             <li><button value="logins">logins</button></li>
             <li><button value="notes">notes</button></li>
             <li><button value="cards">cards</button></li>
         </ul>
-    </div>
-    <div id="main-view">
+    </sidebar>
+    <main id="main-view">
 
         <h2>this is the vault content</h2>
+        <button id="add-login">Add item</button>
 
         <div id="vault-content">
-            <div id="login-view">
+            <section id="logins-view">
+
+
                 <h5>Logins:</h5>
-                {% for login in all_logins %}
-                  {%include 'vault/login-card.html'%}
-                  <!-- TODO want to remove the card inside the forloop, letting js do the fetching but want to display this card as baseplate with HIDDEN toggle to use cloneNode() on from js -->
 
-                {%empty%}
-                <p>empty loop, you don't have any login stored</p>
+                {%include 'vault/login-box.html'%}
+                <!-- TODO want to remove the card inside the forloop, letting js do the fetching but want to display this card as baseplate with HIDDEN toggle to use cloneNode() on from js -->
 
-                {%endfor%}
 
-            </div>
-            <div id="notes-view">
+
+            </section>
+            <section id="notes-view" style="display: none;">
+                <h5>Notes: </h5>
                 <p>you are watching the notes</p>
 
-            </div>
-            <div id="cards-view">
+                <!-- {include 'vault/note-card.html'} -->
+
+
+            </section>
+            <section id="cards-view" style="display: none;">
+                <h5>Cards:</h5>
+
+                <!-- {include 'vault/card-card.html'} -->
+
+
                 <p>you are watching the cards</p>
 
-            </div>
+            </section>
         </div>
 
-    </div>
+    </main>
 
-    <div id="element-preview">
-        <button id="add-item">Add item</button>
-        <div id="new-item" style="display: none ;">
+    <aside id="element-preview" style="display:flex; flex-direction:column;">
+        <div>this section temp content</div>
+        <section id="new-item" style="display: none ;">
+            <!-- includes the form to add a new login -->
             {% include "vault/new_item.html" %}
-        </div>
+        </section>
 
-        <div id="item-content">
+        <section id="login-template" style="display: none;">
+            {%include 'vault/login-template.html' %}
+        </section>
 
-            <p>this is where the element will be displayed or as a modal</p>
-        </div>
-    </div>
+        <section id="note-template" style="display: none;">
+            {%include 'vault/note-template.html' %}
+        </section>
+
+        <section id="card-template" style="display: none;">
+            {%include 'vault/card-template.html' %}
+        </section>
+
+    </aside>
 
 </div>
 

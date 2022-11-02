@@ -14,6 +14,8 @@ class User(AbstractUser):
 
     pass
 
+# ==========================================================================
+
 class Entry(models.Model):
     """login model (TODO change Entry to Login or something better"""
     id = models.BigAutoField(primary_key=True)
@@ -28,19 +30,23 @@ class Entry(models.Model):
     # deleted = models.BooleanField(default=False) ?? set it as a bool or as a folder like entry
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.id}: {self.title}"
+
 
     @property
     def serialized(self):
         return {
+            'id' : hex(self.id),
             'title' : self.title,
             'username': self.username,
             'password': self.password,
             'note': self.note,
-            'uri' : self.uri
+            'type': 'login',
         }
 
     pass
+
+# ==========================================================================
 
 class Uri(models.Model):
     """one to many foreign table for multiple URI belonging to a Login"""
@@ -48,6 +54,8 @@ class Uri(models.Model):
     uri = models.URLField(null=True, blank=True)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="uri")
 
+    pass
+# ==========================================================================
 
 
 class History(models.Model):
@@ -58,6 +66,8 @@ class History(models.Model):
 
     pass
 
+# ==========================================================================
+
 class OtherField(models.Model):
     id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=80, null=True, blank=True)
@@ -66,6 +76,7 @@ class OtherField(models.Model):
 
     pass
 
+# ==========================================================================
 class Note(models.Model):
     id=models.BigAutoField(primary_key=True)
     title= models.CharField(max_length=80, blank=False, null=False)
@@ -75,8 +86,27 @@ class Note(models.Model):
     folder = models.ForeignKey("Folder", on_delete=models.SET_NULL, null=True, related_name="notes_folder") #LATER change name
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="notes")
 
+
+    @property
+    def snippet(self):
+        if self.protected:
+            return "**********"
+        else:
+            return f"{self.description[:10]} ..."
+
+    @property
+    def serialized(self):
+        return {
+            'id': hex(self.id),
+            'title': self.title,
+            'text': self.text,
+            'snippet': self.snippet,
+            'type': "note",
+        }
+
     pass
 
+# ==========================================================================
 
 class Card(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -89,7 +119,19 @@ class Card(models.Model):
     folder = models.ForeignKey("Folder", on_delete=models.SET_NULL, null=True, related_name="cards_folder") #LATER change name
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="cards")
 
+    @property
+    def serialized(self):
+        return {
+            'id': hex(self.id),
+            'title': self.title,
+            'value': self.value,
+            'pin' : self.pin,
+            'notes': self.notes,
+            'type': "card",
+        }
     pass
+
+# ==========================================================================
 
 class Folder(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -97,3 +139,5 @@ class Folder(models.Model):
     color = models.CharField(max_length=8, default='#0081FF')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="folders")
     pass
+
+# ==========================================================================
