@@ -32,16 +32,16 @@ class Entry(models.Model):
     def __str__(self):
         return f"{self.id}: {self.title}"
 
-
+    # TODO add or change .serialized for all login request, maybe add another prop like .preview to send back only some of the fields
     @property
     def serialized(self):
         return {
+            'type': 'login',
             'id' : hex(self.id),
             'title' : self.title,
             'username': self.username,
             'password': self.password,
             'note': self.note,
-            'type': 'login',
         }
 
     pass

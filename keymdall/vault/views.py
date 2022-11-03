@@ -67,8 +67,22 @@ def new_element(request):
 def logins_vault(request):
     """ async route to fetch the data with GET and send back the content from user ordered by title"""
     logins = Entry.objects.filter(owner=request.user).order_by('title')
+
+    # TODO change the .serialized to something like .preview in order to have different responses, without sending unused fields
     return JsonResponse([login.serialized for login in logins], safe=False)
 
+
+# ===================================================
+
+def get_element(request, id):
+    element = Entry.objects.get(id=id)
+    print(id)
+    if element.owner == request.user:
+        print("success")
+        return JsonResponse(element.serialized, safe=False)
+    else:
+        print("NO")
+    pass
 
 # ===================================================
 

@@ -13,7 +13,7 @@
             <li><button value="cards">cards</button></li>
         </ul>
     </sidebar>
-    <main id="main-view">
+    <main id="main-view" class="altro test classe culo-nudo">
 
         <h2>this is the vault content</h2>
         <button id="add-login">Add item</button>
@@ -21,11 +21,12 @@
         <div id="vault-content">
             <section id="logins-view">
 
-
+                <!-- TODO remove templates cards, js manages to build template based on the response of the API, building a card with the values from the keys the fetch request receives -->
                 <h5>Logins:</h5>
 
+
                 {%include 'vault/login-box.html'%}
-                <!-- TODO want to remove the card inside the forloop, letting js do the fetching but want to display this card as baseplate with HIDDEN toggle to use cloneNode() on from js -->
+
 
 
 
@@ -59,7 +60,7 @@
         </section>
 
         <section id="login-template" style="display: none;">
-            {%include 'vault/login-template.html' %}
+            <!-- NON INCLUDE PIU include 'vault/login-template.html' -->
         </section>
 
         <section id="note-template" style="display: none;">

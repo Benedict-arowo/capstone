@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("new_element", views.new_element, name="new_element"),
     path("login_vault", views.logins_vault, name="logins_vault"),
+    path("get_element/<int:id>", views.get_element, name="get_content"), # try different name
     # path("edit_login/<int:id>", views.edit_login, name="edit_login"),
     path("userpage", views.userpage, name="userpage"),
     path("register", views.register, name="register"),
