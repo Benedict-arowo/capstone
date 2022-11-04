@@ -84,3 +84,7 @@ nav>ul>a>li{
     color: white;
     font-weight: bold;
 }
+
+#login-template{
+    background-color: green;
+}

@@ -52,23 +52,18 @@
 
     </main>
 
-    <aside id="element-preview" style="display:flex; flex-direction:column;">
+    <aside id="element-canvas" style="display:flex; flex-direction:column;">
         <div>this section temp content</div>
         <section id="new-item" style="display: none ;">
             <!-- includes the form to add a new login -->
             {% include "vault/new_item.html" %}
         </section>
 
-        <section id="login-template" style="display: none;">
-            <!-- NON INCLUDE PIU include 'vault/login-template.html' -->
-        </section>
+        <section id="element-template" style="display: none;">
 
-        <section id="note-template" style="display: none;">
-            {%include 'vault/note-template.html' %}
-        </section>
-
-        <section id="card-template" style="display: none;">
-            {%include 'vault/card-template.html' %}
+            {%include 'vault/login-template.html'%}
+            {%include 'vault/note-template.html'%}
+            {%include 'vault/card-template.html'%}
         </section>
 
     </aside>

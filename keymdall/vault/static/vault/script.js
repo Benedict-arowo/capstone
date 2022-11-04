@@ -34,7 +34,7 @@ function vault_page() {
   // on vault_section only login list content is set to block, everything else is hidden
 
   // launches function to load the content for logins
-  login_vault();
+  show_logins();
 
   // select the list of toggles, for each button listents to click and calls function that hides all section, except the one in button value
   const toggles_list = document.querySelector("#view_toggles");
@@ -57,7 +57,7 @@ function vault_page() {
 
 // ========================================================================================================
 
-function login_vault() {
+function show_logins() {
   //  GET request from server to get serialized content of each login by user
   fetch(`/login_vault`)
     .then((response) => response.json())
@@ -87,25 +87,28 @@ function login_vault() {
 } /* end function */
 
 // ========================================================================================================
-//  REMOVE this function, or merge with login_content
 
 function view_element(event) {
+  // hides all section in aside, shows the one for element display
   const aside = document.querySelector("aside");
-  aside.querySelectorAll("section").forEach((el) => (el.style.display = "none"));
+  aside
+    .querySelectorAll("section")
+    .forEach((el) => (el.style.display = "none"));
+  document.querySelector("#element-canvas").style.display = "block";
 
-  // on view button click after hiding every section, based on the values calls dedicated function
+  const elem_id = event.currentTarget.getAttribute("data");
+
   const elem_type = event.currentTarget.value;
   switch (elem_type) {
     case "login":
       // get the id from data attribute of the button
-      let id = event.currentTarget.getAttribute("data");
-      login_content(id);
+      login_content(elem_id);
       break;
     case "note":
-      note_content();
+      note_content(elem_id);
       break;
     case "card":
-      card_content();
+      card_content(elem_id);
       break;
 
     default:
@@ -116,63 +119,95 @@ function view_element(event) {
 
 // ========================================================================================================
 
-// sends fetch request with the id and gets back the complete response
 function login_content(id) {
-  const element_section = document.querySelector("#login-template") // TODO cambiare da #login-template ad altro (è un ID con noem uguale a classe)
-  element_section.style.display = "block";
+  const element_template = document.querySelector("#element-canvas");
 
-  fetch(`get_element/${parseInt(id, 16)}`)
+  fetch(`get_element/login=${id}`)
     .then((response) => response.json())
     .then((data) => {
-      // from the response, get the keys
-      const keys = Object.keys(data);
-      // if NO node is present with that template, calls constructor function
-      if ( document.querySelector("." + data.type + "-template") == null ) {
-        console.log("QUUIIII");
-        // calls template constructor, passing keys and changing the parent classname dinamically
-        let template = build_template(keys, data.type);
-        element_section.firstChild.remove()
-        element_section.append(template);
+      // if a login template is not yet present, removes the content of the elem_template and appends a new login-template from function
+      if (document.querySelector("#login-template") == null) {
+        element_template.firstChild.remove();
+        const new_template = build_template("login");
+        element_template.append(new_template);
       }
-      console.log("QUUAAAA");
 
       // now after securing there is that template, set its inner content
-      let template = document.querySelector("." + data.type + "-template");
-      element_section.append(template);
+      const template = document.querySelector('#login-template');
+      const titlearea = document.createElement('TEXTAREA');
+      titlearea.classList.add('title');
+      titlearea.setAttribute('maxlength', 80);
+      titlearea.setAttribute('rows', 1);
+      titlearea.style.resize = "none";
+      titlearea.value = data.title;
+    //   titlearea.onchange = textarea.classList.add('edited'); LATER In a querySelectorAll('TEXTAREA').foreach
+      template.querySelector('.tag-title').append(titlearea);
 
-      keys.forEach((key) => {
-        // console.log(data[`${key}`]);
-        console.log(key);
-        let temp = template.querySelector('.' + key)
-        // console.log(temp);
-        temp.textContent = data[`${key}`];
-        template.append(temp)
+      const usernamearea = document.createElement('TEXTAREA');
+      usernamearea.classList.add('username');
+      usernamearea.setAttribute('maxlength', 80);
+      usernamearea.setAttribute('rows', 1);
+      usernamearea.style.resize = "none";
+      usernamearea.value = data.username;
+      template.querySelector('.tag-username').append(usernamearea);
 
-      });
+      const passwordarea = document.createElement('INPUT');
+      passwordarea.classList.add('password');
+      passwordarea.setAttribute('maxlength', 80 );
+      passwordarea.setAttribute('rows', 1 );
+      passwordarea.setAttribute('type', "password" );
+      passwordarea.style.resize = "none";
+      passwordarea.value = data.password;
+      const toggle_vis = document.createElement('button');
+      toggle_vis.textContent = "view";
+    //   toggle_vis.value = false;
+      template.querySelector('.tag-password').append(passwordarea, toggle_vis);
 
-      // template.style.display = "block";
+      // it is actually working but is still don't know why DON'T TOUCH
+      toggle_vis.addEventListener('click', () =>{
+        if (this.value){
+            // this. value should mean this, as eventlistenere, meaning if this is clicked set it to false, but i can't wrap my head around how this is working
+            passwordarea.setAttribute('type', "password");
+            this.value = false;
+        }else{
+            console.log(this.value);
+            passwordarea.setAttribute('type', "text");
+            this.value = true;
+        }
+    });
+
+      const uriarea = document.createElement('INPUT');
+      uriarea.classList.add('uri');
+      uriarea.setAttribute('type', 'text');
+      uriarea.setAttribute('value', 'http://');
+      uriarea.style.resize = "none";
+      uriarea.value = data.uri;
+      template.querySelector('.uri-username').append(uriarea);
+
+      const notearea = document.createElement('textarea');
+      notearea.classList.add('note');
+      notearea.setAttribute('maxlength', 500);
+      notearea.setAttribute("rows", 4);
+
+
+      template.style.display = "block";
     });
   // template.querySelector('.title') =
+  return null;
 }
 // ========================================================================================================
-// builds template dinamically based on the content
+function build_template(type) {
+    switch (type) {
+        case "login":
+      const template = document.querySelector(".login-base-template").cloneNode(true);
+      template.setAttribute("id", "login-template");
+      return template;
 
-// NOTE THIS APPROACH IS SLOWER THAN CLONE NODE BUT MAKES MORE SENSE not to rely on pre existing template, will mean that changing the structure of the model probably won't break the code, rather will require minor tweaks in the UI, although we can say that fixing a fixed template might be easier than catching and handling the js behavior.
-
-// NOTE can add a check to see if the current template being displayed is already a login template in order to skip the building of it and only handling the inner content, while build template will take action if user switches view between login>card>note etc...
-function build_template(keys, type) {
-
-  // from the call, create the div, set its class dinamically based on the response object
-  // MAYBE switch to ID instead of class for template (setAttribute('id', `${type}-template` )
-  const template = document.createElement("div");
-  template.classList.add(type + "-template");
-  // for every key in it append a div with that className (for OF returns the key, for IN returns the index)
-  for (const key of keys) {
-    const div = document.createElement("div");
-    div.classList.add(key);
-    template.append(div);
+    case "note":
+      console.log("NOTE ON SWITCH STATEMENT 2");
+    case "card":
+      console.log("CARD ON SWITCH STATEMENT 2");
   }
-  return template;
 }
 // ========================================================================================================
 
@@ -205,3 +240,24 @@ function main_view_switch(event) {
     "#" + event.currentTarget.value + "-view"
   ).style.display = "block";
 }
+
+// -------------- DEPRECATED -------------
+// old code that dinamically generated the template based on the object model but allowed limited interaction and is too clunky
+
+// NOTE THIS APPROACH IS slower than clone NODE BUT MIGTH make sense not to rely on pre existing template, will mean that changing the structure of the model probably won't break the code, rather will require minor tweaks in the UI, although we can say that fixing a fixed template might be easier than catching and handling the js behavior.
+
+// NOTE can add a check to see if the current template being displayed is already a login template in order to skip the building of it and only handling the inner content, while build template will take action if user switches view between login>card>note etc...
+// function build_template(keys, type) {
+
+//   // from the call, create the div, set its class dinamically based on the response object
+//   // MAYBE switch to ID instead of class for template (setAttribute('id', `${type}-template` )
+//   const template = document.createElement("div");
+//   template.classList.add(type + "-template");
+//   // for every key in it append a div with that className (for OF returns the key, for IN returns the index)
+//   for (const key of keys) {
+//     const div = document.createElement("div");
+//     div.classList.add(key);
+//     template.append(div);
+//   }
+//   return template;
+// }

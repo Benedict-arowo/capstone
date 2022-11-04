@@ -34,6 +34,11 @@ class Entry(models.Model):
 
     # TODO add or change .serialized for all login request, maybe add another prop like .preview to send back only some of the fields
     @property
+    def preview(self):
+        return{
+            
+        }
+    @property
     def serialized(self):
         return {
             'type': 'login',

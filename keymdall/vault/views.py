@@ -73,15 +73,24 @@ def logins_vault(request):
 
 
 # ===================================================
-
-def get_element(request, id):
-    element = Entry.objects.get(id=id)
-    print(id)
-    if element.owner == request.user:
-        print("success")
-        return JsonResponse(element.serialized, safe=False)
-    else:
-        print("NO")
+# calls for element to dispaly passing type and ID since there are 3 different types, ID is not deterministic
+def get_element(request, type, id):
+    # converts back to intereger (used to be converted on client side)
+    id = int(id, 16)
+    if type == "login":
+        element = Entry.objects.get(id=id)
+        print(id)
+        if element.owner == request.user:
+            print("success")
+            return JsonResponse(element.serialized, safe=False)
+        else:
+            print("NO")
+    elif type == "note":
+        print("note element request")
+        pass
+    elif type == "card":
+        print("card element request")
+        pass
     pass
 
 # ===================================================
