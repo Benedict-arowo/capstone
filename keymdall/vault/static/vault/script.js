@@ -53,6 +53,10 @@ function vault_page() {
       .forEach((section) => (section.style.display = "none"));
     aside_section.querySelector("#new-item").style.display = "block";
   };
+
+//   REMOVE this is the test for a get request empty form+
+
+  const test = document.querySelector('#test').addEventListener('click', fetch_test, false );
 }
 
 // ========================================================================================================
@@ -131,66 +135,68 @@ function login_content(id) {
         const new_template = build_template("login");
         element_template.append(new_template);
       }
+      let old_form = document.querySelector('#element-form')
+      let new_form = old_form.cloneNode(true)
+      console.log(new_form);
+      document.querySelector('#element-canvas').append(new_form);
+    //   // now after securing there is that template, set its inner content
+    //   const template = document.querySelector('#login-template');
+    //   const titlearea = document.createElement('TEXTAREA');
+    //   uriarea.setattribute('name', 'title');
+    //   titlearea.setAttribute('maxlength', 80);
+    //   titlearea.setAttribute('rows', 1);
+    //   titlearea.style.resize = "none";
+    //   titlearea.value = data.title;
+    // //   titlearea.onchange = textarea.classList.add('edited'); LATER In a querySelectorAll('TEXTAREA').foreach
+    //   template.querySelector('.tag-title').append(titlearea);
 
-      // now after securing there is that template, set its inner content
-      const template = document.querySelector('#login-template');
-      const titlearea = document.createElement('TEXTAREA');
-      titlearea.classList.add('title');
-      titlearea.setAttribute('maxlength', 80);
-      titlearea.setAttribute('rows', 1);
-      titlearea.style.resize = "none";
-      titlearea.value = data.title;
-    //   titlearea.onchange = textarea.classList.add('edited'); LATER In a querySelectorAll('TEXTAREA').foreach
-      template.querySelector('.tag-title').append(titlearea);
+    //   const usernamearea = document.createElement('TEXTAREA');
+    //   uriarea.setattribute('name', 'username');
+    //   usernamearea.setAttribute('maxlength', 80);
+    //   usernamearea.setAttribute('rows', 1);
+    //   usernamearea.style.resize = "none";
+    //   usernamearea.value = data.username;
+    //   template.querySelector('.tag-username').append(usernamearea);
 
-      const usernamearea = document.createElement('TEXTAREA');
-      usernamearea.classList.add('username');
-      usernamearea.setAttribute('maxlength', 80);
-      usernamearea.setAttribute('rows', 1);
-      usernamearea.style.resize = "none";
-      usernamearea.value = data.username;
-      template.querySelector('.tag-username').append(usernamearea);
+    //   const passwordarea = document.createElement('INPUT');
+    //   uriarea.setattribute('name', 'password');
+    //   passwordarea.setAttribute('maxlength', 80 );
+    //   passwordarea.setAttribute('rows', 1 );
+    //   passwordarea.setAttribute('type', "password" );
+    //   passwordarea.style.resize = "none";
+    //   passwordarea.value = data.password;
+    //   const toggle_vis = document.createElement('button');
+    //   toggle_vis.textContent = "view";
+    // //   toggle_vis.value = false;
+    //   template.querySelector('.tag-password').append(passwordarea, toggle_vis);
 
-      const passwordarea = document.createElement('INPUT');
-      passwordarea.classList.add('password');
-      passwordarea.setAttribute('maxlength', 80 );
-      passwordarea.setAttribute('rows', 1 );
-      passwordarea.setAttribute('type', "password" );
-      passwordarea.style.resize = "none";
-      passwordarea.value = data.password;
-      const toggle_vis = document.createElement('button');
-      toggle_vis.textContent = "view";
-    //   toggle_vis.value = false;
-      template.querySelector('.tag-password').append(passwordarea, toggle_vis);
+    //   // it is actually working but is still don't know why DON'T TOUCH
+    //   toggle_vis.addEventListener('click', () =>{
+    //     if (this.value){
+    //         // this. value should mean this, as eventlistenere, meaning if this is clicked set it to false, but i can't wrap my head around how this is working
+    //         passwordarea.setAttribute('type', "password");
+    //         this.value = false;
+    //     }else{
+    //         console.log(this.value);
+    //         passwordarea.setAttribute('type', "text");
+    //         this.value = true;
+    //     }
+    // });
 
-      // it is actually working but is still don't know why DON'T TOUCH
-      toggle_vis.addEventListener('click', () =>{
-        if (this.value){
-            // this. value should mean this, as eventlistenere, meaning if this is clicked set it to false, but i can't wrap my head around how this is working
-            passwordarea.setAttribute('type', "password");
-            this.value = false;
-        }else{
-            console.log(this.value);
-            passwordarea.setAttribute('type', "text");
-            this.value = true;
-        }
-    });
+    //   const uriarea = document.createElement('INPUT');
+    //   uriarea.setattribute('name', 'uri');
+    //   uriarea.setAttribute('type', 'text');
+    //   uriarea.setAttribute('value', 'http://');
+    //   uriarea.style.resize = "none";
+    //   uriarea.value = data.uri;
+    //   template.querySelector('.uri-username').append(uriarea);
 
-      const uriarea = document.createElement('INPUT');
-      uriarea.classList.add('uri');
-      uriarea.setAttribute('type', 'text');
-      uriarea.setAttribute('value', 'http://');
-      uriarea.style.resize = "none";
-      uriarea.value = data.uri;
-      template.querySelector('.uri-username').append(uriarea);
+    //   const notearea = document.createElement('textarea');
+    //   uriarea.setattribute('name', 'note');
+    //   notearea.setAttribute('maxlength', 500);
+    //   notearea.setAttribute("rows", 4);
 
-      const notearea = document.createElement('textarea');
-      notearea.classList.add('note');
-      notearea.setAttribute('maxlength', 500);
-      notearea.setAttribute("rows", 4);
-
-
-      template.style.display = "block";
+    //   template.style.display = "block";
     });
   // template.querySelector('.title') =
   return null;
@@ -261,3 +267,12 @@ function main_view_switch(event) {
 //   }
 //   return template;
 // }
+
+
+function fetch_test(){
+    fetch(`/edit_form`)
+    .then((response) => response.text())
+    .then((html) => {console.log(html)
+    document.querySelector('#element-canvas').innerHTML = html;
+    })
+}

@@ -9,13 +9,12 @@ class EntryForm(ModelForm):
         widgets = {
             'password': PasswordInput,
             'note': Textarea(attrs={'rows':6, 'placeholder':"Add notes here..."}),
-
         }
 
 class UriForm(ModelForm):
     class Meta:
         model = Uri
-        fields = ('uri',) 
+        fields = ('uri',)
         widgets = {
             'uri': TextInput(attrs={'placeholder': "url..."})
         }

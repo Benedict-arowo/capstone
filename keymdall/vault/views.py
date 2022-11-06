@@ -141,3 +141,8 @@ def logout_user(request):
     logout(request)
     """add logout funct to log user out and reroute to index page """
     return HttpResponseRedirect(reverse('vault:index'))
+
+
+def edit_form(request):
+    form = EntryForm()
+    return HttpResponse(form)
