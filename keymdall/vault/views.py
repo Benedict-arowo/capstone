@@ -74,6 +74,8 @@ def logins_vault(request):
 
 # ===================================================
 # calls for element to dispaly passing type and ID since there are 3 different types, ID is not deterministic
+# TEMP DEPRECATED al momento per velocizzare passo direttamente a edit quindi non serve serialized per i dati da gestire poi
+# idealmente vorrei prima farli vedere e poi editarli incaso che venga richiesto (seconda richiesta in edit_element)
 def get_element(request, type, id):
     # converts back to intereger (used to be converted on client side)
     id = int(id, 16)
@@ -92,6 +94,8 @@ def get_element(request, type, id):
         print("card element request")
         pass
     pass
+
+
 
 # ===================================================
 
@@ -143,6 +147,35 @@ def logout_user(request):
     return HttpResponseRedirect(reverse('vault:index'))
 
 
-def edit_form(request):
-    form = EntryForm()
-    return HttpResponse(form)
+def edit_login(request, id):
+    id = int(id, 16)
+    login = Entry.objects.get(id=id)
+    if request.user == login.owner:
+
+        # TODO ONLY IF USER IS OWNER (still will be faulty if user is maliciously changing value of the button)
+        #  TTTOOOOODDDDOOOOOOOOOOOOOOOOOOO ^^
+        edit = {
+            "title": login.title,
+            "username": login.username,
+            "password": login.password,
+            "note": login.note,
+            "folder": login.folder,
+            "protected":login.protected,
+            "favorite": login.favorite,
+        }
+        uri = UriForm(initial={"uri":login.uri.first()})
+        form = EntryForm(initial=edit)
+
+        return render(request, 'vault/new_item.html', {"entry_form": form, 'uri_field': uri})
+    else:
+        error = "You are NOT the owner"
+        return JsonResponse({"error":error})
+
+
+def edit_note(request):
+    # TODO
+    pass
+
+def edit_card(request):
+    # TODO
+    pass

@@ -7,7 +7,7 @@ class EntryForm(ModelForm):
         model= Entry
         fields = ('title', 'username', 'password', 'note', 'folder', 'protected', 'favorite',)
         widgets = {
-            'password': PasswordInput,
+            'password': PasswordInput(render_value=True),
             'note': Textarea(attrs={'rows':6, 'placeholder':"Add notes here..."}),
         }
 

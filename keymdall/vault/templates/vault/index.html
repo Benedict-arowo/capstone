@@ -52,20 +52,20 @@
 
     </main>
 
-    <aside id="element-canvas" style="display:flex; flex-direction:column;">
-        <div>this section temp content</div>
-        <button id="test">test</button>
+    <aside style="display:flex; flex-direction:column;">
+    
+
         <section id="new-item" style="display: none ;">
-            <!-- includes the form to add a new login -->
+        <h4>New Element</h4>
+
             {% include "vault/new_item.html" %}
         </section>
 
-        <section id="element-template" style="display: none;">
+        <section id="element-content">
 
-            {%include 'vault/login-template.html'%}
-            {%include 'vault/note-template.html'%}
-            {%include 'vault/card-template.html'%}
         </section>
+
+
 
     </aside>
 

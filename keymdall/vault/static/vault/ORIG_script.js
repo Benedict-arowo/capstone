@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const url = new URL(document.URL);
   const base_path = url.pathname.split("/")[1];
 
-  //   on access if not autheticated, will be redirected to login page
   if (base_path == "login") {
     sign_in_or_register();
   } else if (base_path == "") {
@@ -37,9 +36,9 @@ function vault_page() {
   // launches function to load the content for logins
   show_logins();
 
-  // select the Sidebar list of toggles, for each button listents to click and calls function that hides all section, except the one in button value
-  const view_toggles_list = document.querySelector("#view_toggles");
-  view_toggles_list
+  // select the list of toggles, for each button listents to click and calls function that hides all section, except the one in button value
+  const toggles_list = document.querySelector("#view_toggles");
+  toggles_list
     .querySelectorAll("button")
     .forEach((button) =>
       button.addEventListener("click", main_view_switch, false)
@@ -48,13 +47,16 @@ function vault_page() {
   // on press of Add Item button, hides element in the aside column and only shows Form to add new login
   const add_item = document.querySelector("#add-login");
   add_item.onclick = () => {
-    const aside = document.querySelector("aside");
-    aside.querySelector("#element-content").style.display = "none"
-    aside.querySelector("#new-item").style.display = "block";
+    const aside_section = document.querySelector("aside");
+    aside_section
+      .querySelectorAll("section")
+      .forEach((section) => (section.style.display = "none"));
+    aside_section.querySelector("#new-item").style.display = "block";
   };
 
-  //   REMOVE this is the test for a get request empty form+
+//   REMOVE this is the test for a get request empty form+
 
+  const test = document.querySelector('#test').addEventListener('click', fetch_test, false );
 }
 
 // ========================================================================================================
@@ -93,39 +95,117 @@ function show_logins() {
 function view_element(event) {
   // hides all section in aside, shows the one for element display
   const aside = document.querySelector("aside");
-  aside.querySelector('#new-item').style.display = "none";
-  const element_content = document.querySelector("#element-content");
-  element_content.style.display = "block";
+  aside
+    .querySelectorAll("section")
+    .forEach((el) => (el.style.display = "none"));
+  document.querySelector("#element-canvas").style.display = "block";
 
-  //   gets the ID from the button data= attribute
   const elem_id = event.currentTarget.getAttribute("data");
-  //   gets the type from the button value
+
   const elem_type = event.currentTarget.value;
+  switch (elem_type) {
+    case "login":
+      // get the id from data attribute of the button
+      login_content(elem_id);
+      break;
+    case "note":
+      note_content(elem_id);
+      break;
+    case "card":
+      card_content(elem_id);
+      break;
 
-  fetch(`edit/${elem_type}=${elem_id}`)
-    .then((response) => response.text())
-    .then((form) => {
-
-        element_content.lastChild.remove();
-        //   qua si distacca come vorrei farlo, una volta preso il valore del coso, dovrei inserirlo in un template, ma senza la modifica, per poi inserire la modifica solo quando richiesto da EDIT
-      const edit_form = document.createElement('form');
-      edit_form.setAttribute("method", "post");
-      edit_form.innerHTML = form;
-
-      element_content.append(edit_form);
-    });
+    default:
+      console.log("error SWITCH case");
+      break;
+  }
 }
 
 // ========================================================================================================
 
+function login_content(id) {
+  const element_template = document.querySelector("#element-canvas");
 
+  fetch(`get_element/login=${id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // if a login template is not yet present, removes the content of the elem_template and appends a new login-template from function
+      if (document.querySelector("#login-template") == null) {
+        element_template.firstChild.remove();
+        const new_template = build_template("login");
+        element_template.append(new_template);
+      }
+      let old_form = document.querySelector('#element-form')
+      let new_form = old_form.cloneNode(true)
+      console.log(new_form);
+      document.querySelector('#element-canvas').append(new_form);
+    //   // now after securing there is that template, set its inner content
+    //   const template = document.querySelector('#login-template');
+    //   const titlearea = document.createElement('TEXTAREA');
+    //   uriarea.setattribute('name', 'title');
+    //   titlearea.setAttribute('maxlength', 80);
+    //   titlearea.setAttribute('rows', 1);
+    //   titlearea.style.resize = "none";
+    //   titlearea.value = data.title;
+    // //   titlearea.onchange = textarea.classList.add('edited'); LATER In a querySelectorAll('TEXTAREA').foreach
+    //   template.querySelector('.tag-title').append(titlearea);
+
+    //   const usernamearea = document.createElement('TEXTAREA');
+    //   uriarea.setattribute('name', 'username');
+    //   usernamearea.setAttribute('maxlength', 80);
+    //   usernamearea.setAttribute('rows', 1);
+    //   usernamearea.style.resize = "none";
+    //   usernamearea.value = data.username;
+    //   template.querySelector('.tag-username').append(usernamearea);
+
+    //   const passwordarea = document.createElement('INPUT');
+    //   uriarea.setattribute('name', 'password');
+    //   passwordarea.setAttribute('maxlength', 80 );
+    //   passwordarea.setAttribute('rows', 1 );
+    //   passwordarea.setAttribute('type', "password" );
+    //   passwordarea.style.resize = "none";
+    //   passwordarea.value = data.password;
+    //   const toggle_vis = document.createElement('button');
+    //   toggle_vis.textContent = "view";
+    // //   toggle_vis.value = false;
+    //   template.querySelector('.tag-password').append(passwordarea, toggle_vis);
+
+    //   // it is actually working but is still don't know why DON'T TOUCH
+    //   toggle_vis.addEventListener('click', () =>{
+    //     if (this.value){
+    //         // this. value should mean this, as eventlistenere, meaning if this is clicked set it to false, but i can't wrap my head around how this is working
+    //         passwordarea.setAttribute('type', "password");
+    //         this.value = false;
+    //     }else{
+    //         console.log(this.value);
+    //         passwordarea.setAttribute('type', "text");
+    //         this.value = true;
+    //     }
+    // });
+
+    //   const uriarea = document.createElement('INPUT');
+    //   uriarea.setattribute('name', 'uri');
+    //   uriarea.setAttribute('type', 'text');
+    //   uriarea.setAttribute('value', 'http://');
+    //   uriarea.style.resize = "none";
+    //   uriarea.value = data.uri;
+    //   template.querySelector('.uri-username').append(uriarea);
+
+    //   const notearea = document.createElement('textarea');
+    //   uriarea.setattribute('name', 'note');
+    //   notearea.setAttribute('maxlength', 500);
+    //   notearea.setAttribute("rows", 4);
+
+    //   template.style.display = "block";
+    });
+  // template.querySelector('.title') =
+  return null;
+}
 // ========================================================================================================
 function build_template(type) {
-  switch (type) {
-    case "login":
-      const template = document
-        .querySelector(".login-base-template")
-        .cloneNode(true);
+    switch (type) {
+        case "login":
+      const template = document.querySelector(".login-base-template").cloneNode(true);
       template.setAttribute("id", "login-template");
       return template;
 
@@ -154,7 +234,6 @@ function create_card() {
 }
 
 // ========================================================================================================
-// the sidebar toggles automatically hide all vault content, but then displays the view containing the name of the button
 
 function main_view_switch(event) {
   // selects vault content, sets all section to hidden
@@ -164,7 +243,7 @@ function main_view_switch(event) {
     .forEach((elem) => (elem.style.display = "none"));
   // using the button event value, only shows section of the one clicked by user
   vault_content.querySelector(
-    `#${event.currentTarget.value}-view`
+    "#" + event.currentTarget.value + "-view"
   ).style.display = "block";
 }
 
@@ -189,15 +268,11 @@ function main_view_switch(event) {
 //   return template;
 // }
 
-function fetch_test(id) {
-  fetch(`/edit_form/${id}`)
-    .then((response) => response.text())
-    .then((html) => {
-        console.log(html);
-        let form = document.createElement('form');
-        form.setAttribute("method", "post");
-        form.innerHTML = html;
 
-      document.querySelector("#element-content").append(form);
-    });
+function fetch_test(){
+    fetch(`/edit_form`)
+    .then((response) => response.text())
+    .then((html) => {console.log(html)
+    document.querySelector('#element-canvas').innerHTML = html;
+    })
 }

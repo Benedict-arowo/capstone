@@ -36,7 +36,7 @@ class Entry(models.Model):
     @property
     def preview(self):
         return{
-            
+
         }
     @property
     def serialized(self):
@@ -59,6 +59,8 @@ class Uri(models.Model):
     uri = models.URLField(null=True, blank=True)
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="uri")
 
+    def __str__(self):
+        return self.uri
     pass
 # ==========================================================================
 
@@ -143,6 +145,9 @@ class Folder(models.Model):
     name = models.CharField(max_length=32, blank=False, null=False)
     color = models.CharField(max_length=8, default='#0081FF')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False, related_name="folders")
+
+    def __str__(self):
+        return self.name
     pass
 
 # ==========================================================================
