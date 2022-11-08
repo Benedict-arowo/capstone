@@ -109,15 +109,60 @@ function view_element(event) {
         element_content.lastChild.remove();
         //   qua si distacca come vorrei farlo, una volta preso il valore del coso, dovrei inserirlo in un template, ma senza la modifica, per poi inserire la modifica solo quando richiesto da EDIT
       const edit_form = document.createElement('form');
-      edit_form.setAttribute("method", "post");
+      edit_form.setAttribute("method", "put");
+      edit_form.setAttribute("id", "edittest");
       edit_form.innerHTML = form;
 
       element_content.append(edit_form);
+
+    //   edit_form is an object, that doesn't have direct children but we select All items inside it that are either textarea, input or select, and on their change we add edited class
+      const form_fields = edit_form.querySelectorAll('textarea, input, select');
+      form_fields.forEach((field) =>{
+        field.addEventListener('change', () => field.classList.add('edited'));
+        })
+
+
+    //   addEventlistener Function.prototype.bind() avoids invoking a function directly as the script gets read
+    // this allows for binding parameters that will get sent to the function only at execution
+    // NOTE .bind() evita che venga invocata la funzione direttamente da js, in modo da poter passare parametri
+    // ma sta diventando confusionario, comunque, qui chiama put_edit solo quando c'è click (once=true oppure false non so cosa faccia)
+      edit_form.addEventListener('submit', put_edit.bind(elem_id), false);
+
     });
 }
 
 // ========================================================================================================
+// NOTE una volta chiamato, prende l'event, mentre l'elem_id è il contesto di questa funzione cioè this console.log(`questo È l'id: ${this}`);
+// l'event è sempre il click, mentre il parametro è diventato il contesto (ma non capisco il resto, cercare Currying)
+function put_edit(event){
+    // evita submission
+    event.preventDefault();
+    console.log(` questo È l'id: ${this}`);
+    console.log(` questo ${event.target}`);
+    // dichiara un body vuoto
+    const body = {};
+    //seleziona tutti i field con l'edit e costruisce il body con i suoi key[field.name] = value[field.value]
+    const edited_fields = event.target.querySelectorAll('.edited');
+    edited_fields.forEach((field) => {
+        body[field.name]= field.value;
+    })
+    console.log(event.target.querySelector('[name=csrfmiddlewaretoken]').value);
+    console.log(getCookie("csrftoken"));
 
+    fetch(`edit/login=${this}`, {
+        method : "PUT",
+        Headers:{
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-type": "application/json",
+        },
+        mode:"same-origin",
+        body : JSON.stringify(body),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data)
+    })
+}
 
 // ========================================================================================================
 function build_template(type) {
@@ -168,36 +213,20 @@ function main_view_switch(event) {
   ).style.display = "block";
 }
 
-// -------------- DEPRECATED -------------
-// old code that dinamically generated the template based on the object model but allowed limited interaction and is too clunky
 
-// NOTE THIS APPROACH IS slower than clone NODE BUT MIGTH make sense not to rely on pre existing template, will mean that changing the structure of the model probably won't break the code, rather will require minor tweaks in the UI, although we can say that fixing a fixed template might be easier than catching and handling the js behavior.
 
-// NOTE can add a check to see if the current template being displayed is already a login template in order to skip the building of it and only handling the inner content, while build template will take action if user switches view between login>card>note etc...
-// function build_template(keys, type) {
-
-//   // from the call, create the div, set its class dinamically based on the response object
-//   // MAYBE switch to ID instead of class for template (setAttribute('id', `${type}-template` )
-//   const template = document.createElement("div");
-//   template.classList.add(type + "-template");
-//   // for every key in it append a div with that className (for OF returns the key, for IN returns the index)
-//   for (const key of keys) {
-//     const div = document.createElement("div");
-//     div.classList.add(key);
-//     template.append(div);
-//   }
-//   return template;
-// }
-
-function fetch_test(id) {
-  fetch(`/edit_form/${id}`)
-    .then((response) => response.text())
-    .then((html) => {
-        console.log(html);
-        let form = document.createElement('form');
-        form.setAttribute("method", "post");
-        form.innerHTML = html;
-
-      document.querySelector("#element-content").append(form);
-    });
+function getCookie(name) {
+	let cookieValue = null;
+	if (document.cookie && document.cookie !== "") {
+		const cookies = document.cookie.split(";");
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+			// Does this cookie string begin with the name we want?
+			if (cookie.substring(0, name.length + 1) === name + "=") {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
 }

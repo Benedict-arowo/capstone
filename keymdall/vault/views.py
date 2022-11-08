@@ -44,10 +44,9 @@ def new_element(request):
                 uri_submission = UriForm(request.POST)
                 if uri_submission.is_valid():
 
-                    uri_submission.instance.entry = new_element
+                    uri_submission.instance.reference = new_element
 
                     uri_submission.save()
-                    print(uri_submission)
                 else:
                     # if no addition after the initial "hhtp://"
                     print("submission not valid")
@@ -150,23 +149,37 @@ def logout_user(request):
 def edit_login(request, id):
     id = int(id, 16)
     login = Entry.objects.get(id=id)
+    # se user è owner dell'element
+    print("qui")
     if request.user == login.owner:
+        print("qua")
+        # se è una richiesta PUT = edit sumbission
+        if request.method == "PUT":
+            print("quo")
+            data = json.loads(request.body)
+            print(data)
 
-        # TODO ONLY IF USER IS OWNER (still will be faulty if user is maliciously changing value of the button)
-        #  TTTOOOOODDDDOOOOOOOOOOOOOOOOOOO ^^
-        edit = {
-            "title": login.title,
-            "username": login.username,
-            "password": login.password,
-            "note": login.note,
-            "folder": login.folder,
-            "protected":login.protected,
-            "favorite": login.favorite,
-        }
-        uri = UriForm(initial={"uri":login.uri.first()})
-        form = EntryForm(initial=edit)
 
-        return render(request, 'vault/new_item.html', {"entry_form": form, 'uri_field': uri})
+            return JsonResponse({"message": "Succesfully edited"}, status = 200 ) # oppure 204 = No content
+
+        # se è una GET request, invia il modello coi campi prepompilati.
+        else:
+
+            # TODO ONLY IF USER IS OWNER (still will be faulty if user is maliciously changing value of the button)
+            #  TTTOOOOODDDDOOOOOOOOOOOOOOOOOOO ^^
+            edit = {
+                "title": login.title,
+                "username": login.username,
+                "password": login.password,
+                "note": login.note,
+                "folder": login.folder,
+                "protected":login.protected,
+                "favorite": login.favorite,
+            }
+            uri = UriForm(initial={"uri":login.uri.first()})
+            form = EntryForm(initial=edit)
+
+            return render(request, 'vault/new_item.html', {"entry_form": form, 'uri_field': uri})
     else:
         error = "You are NOT the owner"
         return JsonResponse({"error":error})

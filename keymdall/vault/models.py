@@ -57,7 +57,7 @@ class Uri(models.Model):
     """one to many foreign table for multiple URI belonging to a Login"""
     id = models.BigAutoField(primary_key=True)
     uri = models.URLField(null=True, blank=True)
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="uri")
+    reference = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="uri")
 
     def __str__(self):
         return self.uri
