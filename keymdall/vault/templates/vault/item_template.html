@@ -1,0 +1,12 @@
+{%load static%}
+
+<form id="edit" method="put">
+    {%csrf_token%}
+
+    {{form.as_div | safe}}
+    {{uri_field | safe}}
+
+<input type="submit" value="Submit" name="edit_login">
+
+</form>
+<script>var csrftoken = "{{csrf_token}}";</script>

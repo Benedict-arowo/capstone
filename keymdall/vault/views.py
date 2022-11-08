@@ -178,8 +178,10 @@ def edit_login(request, id):
             }
             uri = UriForm(initial={"uri":login.uri.first()})
             form = EntryForm(initial=edit)
+            print(form)
 
-            return render(request, 'vault/new_item.html', {"entry_form": form, 'uri_field': uri})
+
+            return render(request, 'vault/item_template.html', {"form": form, 'uri_field': uri})
     else:
         error = "You are NOT the owner"
         return JsonResponse({"error":error})

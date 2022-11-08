@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   const url = new URL(document.URL);
   const base_path = url.pathname.split("/")[1];
+  document.querySelector('#new-item').remove();
+
 
   //   on access if not autheticated, will be redirected to login page
   if (base_path == "login") {
@@ -93,7 +95,8 @@ function show_logins() {
 function view_element(event) {
   // hides all section in aside, shows the one for element display
   const aside = document.querySelector("aside");
-  aside.querySelector('#new-item').style.display = "none";
+//   aside.querySelector('#new-item').style.display = "none";
+//   aside.querySelector('#new-item').remove();
   const element_content = document.querySelector("#element-content");
   element_content.style.display = "block";
 
@@ -105,12 +108,11 @@ function view_element(event) {
   fetch(`edit/${elem_type}=${elem_id}`)
     .then((response) => response.text())
     .then((form) => {
-
+        console.log(form);
         element_content.lastChild.remove();
         //   qua si distacca come vorrei farlo, una volta preso il valore del coso, dovrei inserirlo in un template, ma senza la modifica, per poi inserire la modifica solo quando richiesto da EDIT
-      const edit_form = document.createElement('form');
-      edit_form.setAttribute("method", "put");
-      edit_form.setAttribute("id", "edittest");
+      const edit_form = document.querySelector('#edit')
+
       edit_form.innerHTML = form;
 
       element_content.append(edit_form);
@@ -147,12 +149,12 @@ function put_edit(event){
         body[field.name]= field.value;
     })
     console.log(event.target.querySelector('[name=csrfmiddlewaretoken]').value);
-    console.log(getCookie("csrftoken"));
+
 
     fetch(`edit/login=${this}`, {
         method : "PUT",
         Headers:{
-            "X-CSRFToken": getCookie("csrftoken"),
+            "X-CSRFToken":csrftoken,
             "Content-type": "application/json",
         },
         mode:"same-origin",
