@@ -102,7 +102,7 @@ function view_element(event) {
   const elem_type = event.currentTarget.value;
 
 //   would be fetch('edit/login/id')
-  fetch(`edit/${elem_type}=${elem_id}`)
+  fetch(`edit/${elem_type}/${elem_id}`)
     .then((response) => response.text())
     .then((form) => {
         //   qua si distacca come vorrei farlo, una volta preso il valore del coso, dovrei inserirlo in un template, ma senza la modifica, per poi inserire la modifica solo quando richiesto da EDIT
@@ -139,19 +139,23 @@ function put_edit(event){
     const body = {};
     //seleziona tutti i field con l'edit e costruisce il body con i suoi key[field.name] = value[field.value]
     const edited_fields = event.target.querySelectorAll('.edited');
+  // console.log(edited_fields)
     edited_fields.forEach((field) => {
-        body[field.name]= field.value;
+      body[`${field.name}`] = field.value
+      // console.log(field.name)
+        // console.log({[`${[field.name]}`]: field.value})
     })
-    console.log("csrf token 3 different ways, none working");
-    console.log(` 1st way ${event.target.querySelector('[name=csrfmiddlewaretoken]').value}`);
-    console.log(` 2nd way ${csrftoken}`);
-    console.log(` 3rd way ${getCookie("csrftoken")}`);
+    // console.log("csrf token 3 different ways, none working");
+    // console.log(` 1st way ${event.target.querySelector('[name=csrfmiddlewaretoken]').value}`);
+    // console.log(` 2nd way ${csrftoken}`);
+    // console.log(` 3rd way ${getCookie("csrftoken")}`);
 
 
-    fetch(`edit/login=${this}`, {
+    console.log(body)
+    fetch(`edit/login/${this}`, {
         method : "PUT",
-        Headers:{
-            "X-CSRFToken":csrftoken,
+        headers:{
+            "X-CSRFToken": csrftoken,
             "Content-type": "application/json",
         },
         mode:"same-origin",

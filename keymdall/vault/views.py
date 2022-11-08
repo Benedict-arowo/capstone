@@ -109,7 +109,7 @@ def edit_login(request, id):
             data = json.loads(request.body)
             print(data)
 
-            return JsonResponse({"message": "Succesfully edited"}, status = 200 ) # oppure 204 = No content
+            return JsonResponse({"message": "Succesfully edited", "data": data}, status = 200 ) # oppure 204 = No content
 
         # se è una GET request, invia il modello coi campi prepompilati.
         else:

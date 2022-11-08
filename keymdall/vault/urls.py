@@ -13,7 +13,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("login", views.login_page, name="login"),
     path("logout", views.logout_user, name="logout"),
-    path("edit/login=<str:id>", views.edit_login, name="edit_login"),
+    path("edit/login/<str:id>", views.edit_login, name="edit_login"),
     path("edit/note=<str:id>", views.edit_note, name="edit_note"),
     path("edit/card=<str:id>", views.edit_card, name="edit_card"),
 ]
