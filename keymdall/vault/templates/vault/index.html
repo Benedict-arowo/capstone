@@ -7,7 +7,7 @@
 <div id="container-flex">
     <sidebar id="sidebar">
         <p>this is the sidebar</p>
-        <ul id='view_toggles' value="ASD">
+        <ul id='view_toggles'>
             <li><button value="logins">logins</button></li>
             <li><button value="notes">notes</button></li>
             <li><button value="cards">cards</button></li>
@@ -20,40 +20,26 @@
 
         <div id="vault-content">
             <section id="logins-view">
-
-                
                 <h5>Logins:</h5>
 
-
                 {%include 'vault/login-box.html'%}
-
-
-
 
             </section>
             <section id="notes-view" style="display: none;">
                 <h5>Notes: </h5>
                 <p>you are watching the notes</p>
-
                 <!-- {include 'vault/note-card.html'} -->
-
-
             </section>
             <section id="cards-view" style="display: none;">
                 <h5>Cards:</h5>
-
-                <!-- {include 'vault/card-card.html'} -->
-
-
                 <p>you are watching the cards</p>
-
+                <!-- {include 'vault/card-card.html'} -->
             </section>
         </div>
 
     </main>
 
     <aside style="display:flex; flex-direction:column;">
-
 
         <section id="new-item" style="display: none ;">
         <h4>New Element</h4>
@@ -62,7 +48,8 @@
         </section>
 
         <section id="element-content">
-        <p>blank</p>
+        {% include "vault/item_template.html" %}
+
         </section>
 
 

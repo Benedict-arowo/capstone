@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.urls import reverse, reverse_lazy
 
-from .models import Entry, Note, Card, History, User
-from .forms import EntryForm, UriForm, NoteForm, CardForm
+from .models import Entry, User
+from .forms import EntryForm, UriForm
 
 import json
 
@@ -98,6 +98,45 @@ def get_element(request, type, id):
 
 # ===================================================
 
+def edit_login(request, id):
+    id = int(id, 16)
+    login = Entry.objects.get(id=id)
+
+    # se user è owner dell'element
+    if request.user == login.owner:
+        # se è una richiesta PUT = edit sumbission
+        if request.method == "PUT":
+            data = json.loads(request.body)
+            print(data)
+
+            return JsonResponse({"message": "Succesfully edited"}, status = 200 ) # oppure 204 = No content
+
+        # se è una GET request, invia il modello coi campi prepompilati.
+        else:
+
+            # TODO ONLY IF USER IS OWNER (still will be faulty if user is maliciously changing value of the button)
+            #  TTTOOOOODDDDOOOOOOOOOOOOOOOOOOO ^^
+            edit = {
+                "title": login.title,
+                "username": login.username,
+                "password": login.password,
+                "note": login.note,
+                "folder": login.folder,
+                "protected":login.protected,
+                "favorite": login.favorite,
+            }
+            uri = UriForm(initial={"uri":login.uri.first()})
+            form = EntryForm(initial=edit)
+
+
+            return render(request, 'vault/item_template.html', {"form": form, 'uri_field': uri})
+    else:
+        error = "You are NOT the owner"
+        return JsonResponse({"error":error})
+
+
+# ===================================================
+
 @login_required(login_url=reverse_lazy('vault:login'), redirect_field_name=None)
 def userpage(request):
     """see user dashboard and management"""
@@ -144,47 +183,6 @@ def logout_user(request):
     logout(request)
     """add logout funct to log user out and reroute to index page """
     return HttpResponseRedirect(reverse('vault:index'))
-
-
-def edit_login(request, id):
-    id = int(id, 16)
-    login = Entry.objects.get(id=id)
-    # se user è owner dell'element
-    print("qui")
-    if request.user == login.owner:
-        print("qua")
-        # se è una richiesta PUT = edit sumbission
-        if request.method == "PUT":
-            print("quo")
-            data = json.loads(request.body)
-            print(data)
-
-
-            return JsonResponse({"message": "Succesfully edited"}, status = 200 ) # oppure 204 = No content
-
-        # se è una GET request, invia il modello coi campi prepompilati.
-        else:
-
-            # TODO ONLY IF USER IS OWNER (still will be faulty if user is maliciously changing value of the button)
-            #  TTTOOOOODDDDOOOOOOOOOOOOOOOOOOO ^^
-            edit = {
-                "title": login.title,
-                "username": login.username,
-                "password": login.password,
-                "note": login.note,
-                "folder": login.folder,
-                "protected":login.protected,
-                "favorite": login.favorite,
-            }
-            uri = UriForm(initial={"uri":login.uri.first()})
-            form = EntryForm(initial=edit)
-            print(form)
-
-
-            return render(request, 'vault/item_template.html', {"form": form, 'uri_field': uri})
-    else:
-        error = "You are NOT the owner"
-        return JsonResponse({"error":error})
 
 
 def edit_note(request):

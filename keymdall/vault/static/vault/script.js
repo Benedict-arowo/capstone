@@ -47,15 +47,12 @@ function vault_page() {
     );
 
   // on press of Add Item button, hides element in the aside column and only shows Form to add new login
-  const add_item = document.querySelector("#add-login");
-  add_item.onclick = () => {
+  const add_item_btn = document.querySelector("#add-login");
+  add_item_btn.onclick = () => {
     const aside = document.querySelector("aside");
     aside.querySelector("#element-content").style.display = "none"
     aside.querySelector("#new-item").style.display = "block";
   };
-
-  //   REMOVE this is the test for a get request empty form+
-
 }
 
 // ========================================================================================================
@@ -104,10 +101,10 @@ function view_element(event) {
   //   gets the type from the button value
   const elem_type = event.currentTarget.value;
 
+//   would be fetch('edit/login/id')
   fetch(`edit/${elem_type}=${elem_id}`)
     .then((response) => response.text())
     .then((form) => {
-        element_content.lastChild.remove();
         //   qua si distacca come vorrei farlo, una volta preso il valore del coso, dovrei inserirlo in un template, ma senza la modifica, per poi inserire la modifica solo quando richiesto da EDIT
       const edit_form = document.querySelector('#edit')
 
@@ -137,8 +134,7 @@ function view_element(event) {
 function put_edit(event){
     // evita submission
     event.preventDefault();
-    console.log(` questo È l'id: ${this}`);
-    console.log(` questo ${event.target}`);
+
     // dichiara un body vuoto
     const body = {};
     //seleziona tutti i field con l'edit e costruisce il body con i suoi key[field.name] = value[field.value]
@@ -146,7 +142,10 @@ function put_edit(event){
     edited_fields.forEach((field) => {
         body[field.name]= field.value;
     })
-    console.log(event.target.querySelector('[name=csrfmiddlewaretoken]').value);
+    console.log("csrf token 3 different ways, none working");
+    console.log(` 1st way ${event.target.querySelector('[name=csrfmiddlewaretoken]').value}`);
+    console.log(` 2nd way ${csrftoken}`);
+    console.log(` 3rd way ${getCookie("csrftoken")}`);
 
 
     fetch(`edit/login=${this}`, {
@@ -165,21 +164,21 @@ function put_edit(event){
 }
 
 // ========================================================================================================
-function build_template(type) {
-  switch (type) {
-    case "login":
-      const template = document
-        .querySelector(".login-base-template")
-        .cloneNode(true);
-      template.setAttribute("id", "login-template");
-      return template;
+// function build_template(type) {
+//   switch (type) {
+//     case "login":
+//       const template = document
+//         .querySelector(".login-base-template")
+//         .cloneNode(true);
+//       template.setAttribute("id", "login-template");
+//       return template;
 
-    case "note":
-      console.log("NOTE ON SWITCH STATEMENT 2");
-    case "card":
-      console.log("CARD ON SWITCH STATEMENT 2");
-  }
-}
+//     case "note":
+//       console.log("NOTE ON SWITCH STATEMENT 2");
+//     case "card":
+//       console.log("CARD ON SWITCH STATEMENT 2");
+//   }
+// }
 // ========================================================================================================
 
 // gets the value of the element that triggered it
@@ -204,13 +203,9 @@ function create_card() {
 function main_view_switch(event) {
   // selects vault content, sets all section to hidden
   const vault_content = document.querySelector("#vault-content");
-  vault_content
-    .querySelectorAll("section")
-    .forEach((elem) => (elem.style.display = "none"));
+  vault_content.querySelectorAll("section").forEach((elem) => (elem.style.display = "none"));
   // using the button event value, only shows section of the one clicked by user
-  vault_content.querySelector(
-    `#${event.currentTarget.value}-view`
-  ).style.display = "block";
+  vault_content.querySelector(`#${event.currentTarget.value}-view`).style.display = "block";
 }
 
 
