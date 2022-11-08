@@ -142,7 +142,7 @@ def register(request):
 
 def logout_user(request):
     logout(request)
-    """add logout funct to log user out and reroute to index page """
+    """add logout funct to log user out and reroute to index page """a
     return HttpResponseRedirect(reverse('vault:index'))
 
 
