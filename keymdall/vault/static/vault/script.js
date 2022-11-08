@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const url = new URL(document.URL);
   const base_path = url.pathname.split("/")[1];
-  document.querySelector('#new-item').remove();
 
 
   //   on access if not autheticated, will be redirected to login page
@@ -95,7 +94,7 @@ function show_logins() {
 function view_element(event) {
   // hides all section in aside, shows the one for element display
   const aside = document.querySelector("aside");
-//   aside.querySelector('#new-item').style.display = "none";
+  aside.querySelector('#new-item').style.display = "none";
 //   aside.querySelector('#new-item').remove();
   const element_content = document.querySelector("#element-content");
   element_content.style.display = "block";
@@ -108,7 +107,6 @@ function view_element(event) {
   fetch(`edit/${elem_type}=${elem_id}`)
     .then((response) => response.text())
     .then((form) => {
-        console.log(form);
         element_content.lastChild.remove();
         //   qua si distacca come vorrei farlo, una volta preso il valore del coso, dovrei inserirlo in un template, ma senza la modifica, per poi inserire la modifica solo quando richiesto da EDIT
       const edit_form = document.querySelector('#edit')
